@@ -14,8 +14,7 @@ export const Results = () => {
         <h6>Alx-en-Proence</h6>
         <h6>Montpellier</h6>
       </div>
-      <div className="grid w-full max-w-sm items-center gap-1.5 m-4">
-      </div>
+      <div className="grid w-full max-w-sm items-center gap-1.5 m-4"></div>
       <div className="grid w-full max-w-sm items-center gap-1.5 m-4">
         <h6>765.16 km is total distance</h6>
         <h6>10 passengers</h6>
