@@ -22,14 +22,22 @@ export function IncrementDecrement(props: IncrementDecrementProps) {
   };
 
   return (
-    <Card className="w-[120px] p-3 justify-center flex">
-      <Button className="w-[25px] h-[25px] p-0" onClick={handleDecrement} type="button">
+    <Card className="w-[120px] p-1 justify-center items-center flex">
+      <Button
+        className="w-[25px] h-[25px] p-0"
+        onClick={handleDecrement}
+        type="button"
+      >
         <Minus size={15} />
       </Button>
       <div className="w-[30px] h-[30px] p-0 justify-center items-center flex">
         {children}
       </div>
-      <Button className="w-[25px] h-[25px] p-0" onClick={handleIncrement} type="button">
+      <Button
+        className="w-[25px] h-[25px] p-0"
+        onClick={handleIncrement}
+        type="button"
+      >
         <Plus size={15} />
       </Button>
     </Card>
