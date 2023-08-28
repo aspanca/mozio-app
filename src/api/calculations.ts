@@ -2,7 +2,7 @@ import haversineDistance from "haversine-distance";
 
 const metersToKilometers = (meters: number): string => {
   const kilometers = meters / 1000;
-  return kilometers.toFixed(2);
+  return kilometers.toFixed(2) + " km";
 };
 
 export const calculations = (destinations: any): any => {
@@ -23,7 +23,7 @@ export const calculations = (destinations: any): any => {
 
   const pinPointDistance = destinations.map(
     (destination: any, index: number) => {
-      if (index === 0) {
+      if (index === destinations.length - 1) {
         return {
           ...destination,
           distance: null,
@@ -38,8 +38,8 @@ export const calculations = (destinations: any): any => {
                 longitude: (destination as any).lng,
               },
               {
-                latitude: (destinations[index - 1] as any).lat,
-                longitude: (destinations[index - 1] as any).lng,
+                latitude: (destinations[index + 1] as any).lat,
+                longitude: (destinations[index + 1] as any).lng,
               }
             )
           ),
@@ -60,14 +60,10 @@ export const calculations = (destinations: any): any => {
         reject(new Error("An unexpected error occurred!"));
       } else {
         resolve({
-          data: {
-            pinPointDistance,
-            distanceInKm,
-          },
-          success: true,
-          error: false,
+          pinPointDistance,
+          distanceInKm,
         });
       }
-    }, 3000);
+    }, 500);
   });
 };

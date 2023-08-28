@@ -3,23 +3,28 @@ import { NavLink } from "react-router-dom";
 import { paths } from "@/router";
 import { calculations, locations } from "@/api";
 import { DateTime } from "luxon";
-import queryString from "query-string";
 import { useQuery } from "react-query";
 import { Loader } from "@/components/ui/loader";
 import { Error } from "@/components/ui/error";
+import { DistanceStepper } from "@/components/ui/distance-stepper";
+import { Circle, MapPin } from "lucide-react";
+import { parseLocationSerch } from "@/utils";
 
 export const Results = () => {
-  const search = queryString.parse(location.search, { parseNumbers: true });
+  const search = parseLocationSerch();
 
-  const destinations = (search.destinations as string[]).map((destination) => {
-    return locations.find((location) => location.city === destination);
-  });
+  const destinations = Array.isArray(search.destinations)
+    ? (search.destinations as string[]).map((destination) => {
+        return locations.find((location) => location.city === destination);
+      })
+    : [search.destinations];
 
   const { data, isLoading, isError } = useQuery("calculations", () =>
     calculations(destinations)
   );
 
-  console.log(data, isLoading, isError);
+  const { pinPointDistance, distanceInKm } = data ?? {};
+  const { date, passengers } = search ?? {};
 
   if (isError) {
     return <Error />;
@@ -27,29 +32,33 @@ export const Results = () => {
 
   return (
     <Loader isLoading={isLoading}>
-      <div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 m-4">
-          {data?.data?.pinPointDistance?.map(
-            (destination: any, index: number) => {
-              return (
-                <div key={index}>
-                  {destination.distance}
-                  <h1 key={destination.city}>{destination.city}</h1>
-                </div>
-              );
-            }
-          )}
+      <div className="w-[500px] m-auto">
+        <div className="p-3">
+          <DistanceStepper
+            steps={pinPointDistance?.map((destination: any, index: number) => {
+              return {
+                icon:
+                  index === data?.pinPointDistance.length - 1 ? (
+                    <MapPin size={16} className="text-red-500" />
+                  ) : (
+                    <Circle size={16} />
+                  ),
+                element: destination.city,
+                distance: destination.distance,
+              };
+            })}
+          />
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 m-4">
-          <h6>{data?.data?.distanceInKm} km is total distance</h6>
-          <h6>{search.passengers} passengers</h6>
+        <div className="p-3 text-center">
+          <h6>{distanceInKm} km is total distance</h6>
+          <h6>{passengers} passengers</h6>
           <h6>
-            {DateTime.fromISO(
-              new Date(search.date as string).toISOString()
-            ).toFormat("MMM d, yyyy")}
+            {DateTime.fromISO(new Date(date as string).toISOString()).toFormat(
+              "MMM d, yyyy"
+            )}
           </h6>
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5 m-4">
+        <div className="p-3 text-center">
           <Button asChild>
             <NavLink to={paths.home}>Back</NavLink>
           </Button>
