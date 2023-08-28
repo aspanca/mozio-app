@@ -55,7 +55,7 @@ export const updateQueryParams = (values: FormObjectType) => {
   if (values.destinations.length) {
     url.searchParams.delete('destinations');
     values.destinations.forEach((destination: City) => {
-      url.searchParams.append('destinations', destination?.city.toString());
+      url.searchParams.append('destinations', destination?.city?.toString());
     });
   }
 
