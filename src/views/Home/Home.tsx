@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CalendarIcon,
   Circle,
   MapPin,
   MinusCircle,
   PlusCircle,
-} from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import * as z from "zod";
+} from 'lucide-react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -21,31 +21,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { IF } from "@/components/IF";
-import { IncrementDecrement } from "@/components/ui/increment-decrement";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/popover';
+import { IF } from '@/components/IF';
+import { IncrementDecrement } from '@/components/ui/increment-decrement';
+import { Input } from '@/components/ui/input';
 
-import { useNavigate } from "react-router-dom";
-import { paths } from "@/router";
-import { useEffect } from "react";
-import { locations } from "@/api";
-import { Stepper } from "@/components/ui/stepper";
+import { useNavigate } from 'react-router-dom';
+import { paths } from '@/router';
+import { useEffect } from 'react';
+import { locations } from '@/api';
+import { Stepper } from '@/components/ui/stepper';
 import {
   constructFormObjectFromSearch,
   constructSearchObjectFromForm,
   stringifySearch,
   updateQueryParams,
-} from "@/utils";
-import { Dropdown } from "./Dropdown";
-import { FormSchema } from "@/models";
-import { formatCalendarDate, isBeforeToday } from "@/utils/date";
+} from '@/utils';
+import { Dropdown } from './Dropdown';
+import { FormSchema, ValidKeys } from '@/shared';
+import { formatCalendarDate, isBeforeToday } from '@/utils/date';
 
 const displayIcon = (index: number, totalLength: number) => {
   return index === totalLength - 1 ? (
@@ -59,33 +59,32 @@ export function Home() {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
-    mode: "all",
+    mode: 'all',
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      destinations: [{ city: "" }],
+      destinations: [{ city: '' }],
       passengers: 0,
       date: new Date(),
     },
   });
 
-  const values = form.getValues();
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "destinations",
+    name: 'destinations',
   });
+  const values = form.getValues();
 
   useEffect(() => {
     if (form.formState.isDirty) {
       updateQueryParams(values);
     }
-  }, [values]);
+  }, [values, form.formState.isDirty]);
 
   useEffect(() => {
     const formObject = constructFormObjectFromSearch();
 
     form.reset(formObject);
-  }, []);
+  }, [form]);
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     const searchObject = constructSearchObjectFromForm(data);
@@ -97,7 +96,7 @@ export function Home() {
   };
 
   const handleAppend = () => {
-    append({ city: "" });
+    append({ city: '' });
   };
 
   return (
@@ -131,13 +130,13 @@ export function Home() {
                                   selectedValue={
                                     field.value
                                       ? (locations.find(
-                                          (location) =>
+                                          location =>
                                             location.city === field.value
                                         )?.city as string)
-                                      : "Select destination"
+                                      : 'Select destination'
                                   }
                                   onSelect={(key: string, value: string) =>
-                                    form.setValue(key as any, value, {
+                                    form.setValue(key as ValidKeys, value, {
                                       shouldDirty: true,
                                       shouldValidate: true,
                                     })
@@ -184,10 +183,10 @@ export function Home() {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
-                              variant={"outline"}
+                              variant={'outline'}
                               className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                'w-full pl-3 text-left font-normal',
+                                !field.value && 'text-muted-foreground'
                               )}
                             >
                               {formatCalendarDate(field.value)}
@@ -200,7 +199,7 @@ export function Home() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => isBeforeToday(date)}
+                            disabled={date => isBeforeToday(date)}
                             initialFocus
                           />
                         </PopoverContent>
@@ -219,7 +218,7 @@ export function Home() {
                       <FormLabel>Passengers</FormLabel>
                       <IncrementDecrement
                         value={field.value}
-                        onChange={(value) => {
+                        onChange={value => {
                           form.setValue(`passengers`, value, {
                             shouldDirty: true,
                             shouldValidate: true,

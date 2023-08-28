@@ -1,20 +1,23 @@
-import haversineDistance from "haversine-distance";
+import { CalculationsResult, Destination } from '@/shared';
+import haversineDistance from 'haversine-distance';
 
 const metersToKilometers = (meters: number): string => {
   const kilometers = meters / 1000;
-  return kilometers.toFixed(2) + " km";
+  return kilometers.toFixed(2) + ' km';
 };
 
-export const calculations = (destinations: any): any => {
+export const calculations = (
+  destinations: Destination[]
+): Promise<CalculationsResult> => {
   const distance = destinations.reduce(
-    (acc: number, el: any, index: number) =>
+    (acc: number, el: Destination, index: number) =>
       (acc = destinations[index + 1]
         ? acc +
           haversineDistance(
             { latitude: el.lat, longitude: el.lng },
             {
-              latitude: (destinations[index + 1] as any).lat,
-              longitude: (destinations[index + 1] as any).lng,
+              latitude: destinations[index + 1].lat,
+              longitude: destinations[index + 1].lng,
             }
           )
         : acc),
@@ -22,7 +25,7 @@ export const calculations = (destinations: any): any => {
   );
 
   const pinPointDistance = destinations.map(
-    (destination: any, index: number) => {
+    (destination: Destination, index: number) => {
       if (index === destinations.length - 1) {
         return {
           ...destination,
@@ -34,12 +37,12 @@ export const calculations = (destinations: any): any => {
           distance: metersToKilometers(
             haversineDistance(
               {
-                latitude: (destination as any).lat,
-                longitude: (destination as any).lng,
+                latitude: destination.lat,
+                longitude: destination.lng,
               },
               {
-                latitude: (destinations[index + 1] as any).lat,
-                longitude: (destinations[index + 1] as any).lng,
+                latitude: destinations[index + 1].lat,
+                longitude: destinations[index + 1].lng,
               }
             )
           ),
@@ -54,10 +57,10 @@ export const calculations = (destinations: any): any => {
     setTimeout(() => {
       if (
         destinations
-          .map((destination: any) => destination.city)
-          .includes("Dijon")
+          .map((destination: Destination) => destination.city)
+          .includes('Dijon')
       ) {
-        reject(new Error("An unexpected error occurred!"));
+        reject(new Error('An unexpected error occurred!'));
       } else {
         resolve({
           pinPointDistance,

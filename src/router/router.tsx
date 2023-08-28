@@ -1,7 +1,7 @@
-import { Home, Results } from "@/views";
+import { Home, Results } from '@/views';
 
-import { createBrowserRouter } from "react-router-dom";
-import { paths } from ".";
+import { createBrowserRouter } from 'react-router-dom';
+import { paths } from '.';
 
 export const router = createBrowserRouter([
   {

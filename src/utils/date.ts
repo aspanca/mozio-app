@@ -1,9 +1,9 @@
-import { format } from "date-fns";
-import { DateTime } from "luxon";
+import { format } from 'date-fns';
+import { DateTime } from 'luxon';
 
 export const formatDate = (date: string) => {
   return DateTime.fromISO(new Date(date as string).toISOString()).toFormat(
-    "MMM d, yyyy"
+    'MMM d, yyyy'
   );
 };
 
@@ -12,5 +12,5 @@ export const isBeforeToday = (date: Date) => {
 };
 
 export const formatCalendarDate = (date?: Date) => {
-  return date ? format(date, "PPP") : "Pick a date";
+  return date ? format(date, 'PPP') : 'Pick a date';
 };

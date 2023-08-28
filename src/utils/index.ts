@@ -1,4 +1,4 @@
-export { debounce } from "./js";
+export { debounce } from './js';
 export {
   isSearchValid,
   constructFormObjectFromSearch,
@@ -6,5 +6,5 @@ export {
   parseLocationSerch,
   stringifySearch,
   updateQueryParams,
-} from "./search";
-export { formatDate } from "./date";
+} from './search';
+export { formatDate } from './date';

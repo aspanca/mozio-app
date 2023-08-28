@@ -1,2 +1,2 @@
-export { locations } from "./locations";
-export { calculations } from "./calculations";
+export { locations } from './locations';
+export { calculations } from './calculations';

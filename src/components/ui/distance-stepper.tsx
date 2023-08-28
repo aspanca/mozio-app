@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { IF } from "../IF";
+import { Badge } from '@/components/ui/badge';
+import { IF } from '../IF';
 
 type Step = {
   icon: React.ReactNode;
   element: React.ReactNode;
-  distance: string;
+  distance: string | null;
 };
 
 type DistanceStepperProps = {

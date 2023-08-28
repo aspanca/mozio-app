@@ -1,4 +1,4 @@
 export const paths = {
-  home: "/",
-  results: "/results",
+  home: '/',
+  results: '/results',
 };

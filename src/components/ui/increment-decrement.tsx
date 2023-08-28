@@ -1,6 +1,6 @@
-import { Button } from "./button";
-import { Card } from "./card";
-import { Minus, Plus } from "lucide-react";
+import { Button } from './button';
+import { Card } from './card';
+import { Minus, Plus } from 'lucide-react';
 
 type IncrementDecrementProps = {
   children: React.ReactNode;

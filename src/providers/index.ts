@@ -1,1 +1,1 @@
-export { AppRouterProvider } from "./AppRouterProvider";
+export { AppRouterProvider } from './AppRouterProvider';
