@@ -1,4 +1,3 @@
-import { fetchLocations } from '@/api/locations';
 import { IF } from '@/components/IF';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -16,12 +15,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useHome } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { LocationType } from '@/shared';
-import { debounce } from '@/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
-import { useState } from 'react';
-import { useQuery } from 'react-query';
 
 type DropdownProps = {
   value: string;
@@ -32,17 +29,7 @@ type DropdownProps = {
 
 export const Dropdown = (props: DropdownProps) => {
   const { value, selectedValue, onSelect, index } = props;
-
-  const [searchValue, setSerchtValue] = useState('');
-
-  const { data, isLoading, isError } = useQuery(
-    ['locations', searchValue],
-    () => fetchLocations(searchValue)
-  );
-
-  const handleChange = debounce((e: React.KeyboardEvent<HTMLInputElement>) => {
-    setSerchtValue((e.target as HTMLInputElement).value);
-  }, 500);
+  const { data, isLoading, isError, handleChange } = useHome();
 
   return (
     <Popover>

@@ -1,6 +1,3 @@
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CalendarIcon,
   Circle,
@@ -8,8 +5,6 @@ import {
   MinusCircle,
   PlusCircle,
 } from 'lucide-react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import * as z from 'zod';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -31,21 +26,12 @@ import {
 import { IF } from '@/components/IF';
 import { IncrementDecrement } from '@/components/ui/increment-decrement';
 import { Input } from '@/components/ui/input';
-
-import { useNavigate } from 'react-router-dom';
-import { paths } from '@/router';
-import { useEffect } from 'react';
 import { locations } from '@/api';
 import { Stepper } from '@/components/ui/stepper';
-import {
-  constructFormObjectFromSearch,
-  constructSearchObjectFromForm,
-  stringifySearch,
-  updateQueryParams,
-} from '@/utils';
 import { Dropdown } from './Dropdown';
-import { FormObjectTypeT, FormSchema, LocationType, ValidKeys } from '@/shared';
+import { LocationType, ValidKeys } from '@/shared';
 import { formatCalendarDate, isBeforeToday } from '@/utils/date';
+import { useHome } from '@/hooks';
 
 const displayIcon = (index: number, totalLength: number) => {
   return index === totalLength - 1 ? (
@@ -56,49 +42,7 @@ const displayIcon = (index: number, totalLength: number) => {
 };
 
 export const Home = () => {
-  const navigate = useNavigate();
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    mode: 'all',
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      cities: [{ city: '' }],
-      passengers: 0,
-      date: new Date(),
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'cities',
-  });
-
-  const values: FormObjectTypeT = form.getValues() as FormObjectTypeT;
-
-  useEffect(() => {
-    if (form.formState.isDirty) {
-      updateQueryParams(values);
-    }
-  }, [values, form.formState.isDirty]);
-
-  useEffect(() => {
-    const formObject = constructFormObjectFromSearch();
-
-    form.reset(formObject);
-  }, [form]);
-
-  const onSubmit = (data: FormObjectTypeT) => {
-    const searchObject = constructSearchObjectFromForm(data);
-
-    navigate({
-      pathname: paths.results,
-      search: stringifySearch(searchObject),
-    });
-  };
-
-  const handleAppend = () => {
-    append({ city: '' });
-  };
+  const { form, fields, onSubmit, handleAppend, handleRemove } = useHome();
 
   return (
     <div className="w-[800px] m-auto">
@@ -154,7 +98,7 @@ export const Home = () => {
                           <div className="w-[20%] flex justify-center mt-8">
                             <MinusCircle
                               size={15}
-                              onClick={() => remove(index)}
+                              onClick={() => handleRemove(index)}
                               className="cursor-pointer"
                             />
                           </div>
@@ -247,4 +191,4 @@ export const Home = () => {
       </Form>
     </div>
   );
-}
+};

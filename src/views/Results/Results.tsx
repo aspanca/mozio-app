@@ -1,36 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { NavLink } from 'react-router-dom';
 import { paths } from '@/router';
-import { calculations, locations } from '@/api';
-import { useQuery } from 'react-query';
 import { Loader } from '@/components/ui/loader';
 import { Error } from '@/components/ui/error';
 import { DistanceStepper } from '@/components/ui/distance-stepper';
 import { Circle, MapPin } from 'lucide-react';
-import { formatDate, parseLocationSerch } from '@/utils';
-import { LocationType, PinPointType, QueryParamsType } from '@/shared';
+import { formatDate } from '@/utils';
+import { PinPointType } from '@/shared';
+import { useSearchResults } from '@/hooks';
 
 export const Results = () => {
-  const search: QueryParamsType = parseLocationSerch();
-
-  const cities: LocationType[] = Array.isArray(search.cities)
-    ? search.cities.map(city => {
-        return locations.find(
-          (location: LocationType) => location.city === city
-        ) as LocationType;
-      })
-    : [
-        locations.find(
-          (location: LocationType) => location.city === search.cities
-        ) as LocationType,
-      ];
-
-  const { data, isLoading, isError } = useQuery('calculations', () =>
-    calculations(cities)
-  );
-
-  const { pinPointDistance, distanceInKm } = data ?? {};
-  const { date, passengers } = search ?? {};
+  const {
+    pinPointDistance,
+    distanceInKm,
+    date,
+    passengers,
+    isLoading,
+    isError,
+  } = useSearchResults();
 
   if (isError) {
     return <Error />;
