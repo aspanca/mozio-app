@@ -1,11 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import {
   CalendarIcon,
-  Check,
-  ChevronsUpDown,
   Circle,
   MapPin,
   MinusCircle,
@@ -25,13 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+
 import {
   Popover,
   PopoverContent,
@@ -40,44 +31,31 @@ import {
 import { IF } from "@/components/IF";
 import { IncrementDecrement } from "@/components/ui/increment-decrement";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { locations } from "@/api";
 import { Stepper } from "@/components/ui/stepper";
 import {
   constructFormObjectFromSearch,
   constructSearchObjectFromForm,
-  isSearchValid,
   stringifySearch,
+  updateQueryParams,
 } from "@/utils";
-import { useQuery } from "react-query";
-import { fetchLocations } from "@/api/locations";
-import { Loader } from "@/components/ui/loader";
+import { Dropdown } from "./Dropdown";
+import { FormSchema } from "@/models";
+import { formatCalendarDate, isBeforeToday } from "@/utils/date";
 
-const FormSchema = z.object({
-  date: z.date({
-    required_error: "A date of birth is required.",
-  }),
-  destinations: z.array(
-    z.object({
-      city: z.string().nonempty("City is required"),
-    })
-  ),
-  passengers: z.number().gt(0, {
-    message: "Number of passengers must be greater than zero",
-  }),
-});
+const displayIcon = (index: number, totalLength: number) => {
+  return index === totalLength - 1 ? (
+    <MapPin size={16} className="text-red-500" />
+  ) : (
+    <Circle size={16} />
+  );
+};
 
 export function Home() {
-  const [value, setValue] = useState("");
-
-  const { data, isLoading, isError } = useQuery(["locations", value], () =>
-    fetchLocations(value)
-  );
-
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -86,8 +64,11 @@ export function Home() {
     defaultValues: {
       destinations: [{ city: "" }],
       passengers: 0,
+      date: new Date(),
     },
   });
+
+  const values = form.getValues();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -95,8 +76,12 @@ export function Home() {
   });
 
   useEffect(() => {
-    if (!isSearchValid()) return;
+    if (form.formState.isDirty) {
+      updateQueryParams(values);
+    }
+  }, [values]);
 
+  useEffect(() => {
     const formObject = constructFormObjectFromSearch();
 
     form.reset(formObject);
@@ -115,11 +100,6 @@ export function Home() {
     append({ city: "" });
   };
 
-  const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) =>
-    setValue(e.currentTarget.value);
-
-  console.log(data);
-
   return (
     <div className="w-[800px] m-auto">
       <Form {...form}>
@@ -129,12 +109,7 @@ export function Home() {
               <Stepper
                 steps={fields.map((field, index) => {
                   return {
-                    icon:
-                      index === fields.length - 1 ? (
-                        <MapPin size={16} className="text-red-500" />
-                      ) : (
-                        <Circle size={16} />
-                      ),
+                    icon: displayIcon(index, fields.length),
                     element: (
                       <div className="p-3 flex items-start" key={field.id}>
                         <div className="w-[80%]">
@@ -151,81 +126,24 @@ export function Home() {
                                     City of Destination
                                   </IF>
                                 </FormLabel>
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <FormControl>
-                                      <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        className={cn(
-                                          "w-full justify-between",
-                                          !field.value &&
-                                            "text-muted-foreground"
-                                        )}
-                                      >
-                                        {field.value
-                                          ? locations.find(
-                                              (location) =>
-                                                location.city === field.value
-                                            )?.city
-                                          : "Select destination"}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-full p-0">
-                                    <Command className="w-[500px]">
-                                      <CommandInput
-                                        placeholder="Search city..."
-                                        onKeyUp={handleChange}
-                                      />
-                                      <Loader isLoading={isLoading}>
-                                        <IF condition={isError}>
-                                          <Alert variant="destructive">
-                                            <AlertTitle>
-                                              Oops! failed to search with this
-                                              keyword. {field.value}
-                                            </AlertTitle>
-                                          </Alert>
-                                        </IF>
-                                        <IF
-                                          condition={(data as [])?.length === 0}
-                                        >
-                                          <CommandEmpty>
-                                            No city found.
-                                          </CommandEmpty>
-                                        </IF>
-                                        <CommandGroup>
-                                          {(data as [])?.map(
-                                            (location: any) => (
-                                              <CommandItem
-                                                value={location.city}
-                                                key={location.city}
-                                                onSelect={() => {
-                                                  form.setValue(
-                                                    `destinations.${index}.city`,
-                                                    location.city
-                                                  );
-                                                }}
-                                              >
-                                                <Check
-                                                  className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    location.city ===
-                                                      field.value
-                                                      ? "opacity-100"
-                                                      : "opacity-0"
-                                                  )}
-                                                />
-                                                {location.city}
-                                              </CommandItem>
-                                            )
-                                          )}
-                                        </CommandGroup>
-                                      </Loader>
-                                    </Command>
-                                  </PopoverContent>
-                                </Popover>
+                                <Dropdown
+                                  value={field.value}
+                                  selectedValue={
+                                    field.value
+                                      ? (locations.find(
+                                          (location) =>
+                                            location.city === field.value
+                                        )?.city as string)
+                                      : "Select destination"
+                                  }
+                                  onSelect={(key: string, value: string) =>
+                                    form.setValue(key as any, value, {
+                                      shouldDirty: true,
+                                      shouldValidate: true,
+                                    })
+                                  }
+                                  index={index}
+                                />
 
                                 <FormMessage />
                               </FormItem>
@@ -272,11 +190,7 @@ export function Home() {
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
+                              {formatCalendarDate(field.value)}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl>
@@ -286,9 +200,7 @@ export function Home() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) =>
-                              date < new Date(new Date().setHours(0, 0, 0, 0))
-                            }
+                            disabled={(date) => isBeforeToday(date)}
                             initialFocus
                           />
                         </PopoverContent>
@@ -308,7 +220,10 @@ export function Home() {
                       <IncrementDecrement
                         value={field.value}
                         onChange={(value) => {
-                          form.setValue(`passengers`, value);
+                          form.setValue(`passengers`, value, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          });
                         }}
                       >
                         <Input

@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { paths } from "@/router";
 import { calculations, locations } from "@/api";
-import { DateTime } from "luxon";
 import { useQuery } from "react-query";
 import { Loader } from "@/components/ui/loader";
 import { Error } from "@/components/ui/error";
 import { DistanceStepper } from "@/components/ui/distance-stepper";
 import { Circle, MapPin } from "lucide-react";
-import { parseLocationSerch } from "@/utils";
+import { formatDate, parseLocationSerch } from "@/utils";
 
 export const Results = () => {
   const search = parseLocationSerch();
@@ -52,11 +51,7 @@ export const Results = () => {
         <div className="p-3 text-center">
           <h6>{distanceInKm} km is total distance</h6>
           <h6>{passengers} passengers</h6>
-          <h6>
-            {DateTime.fromISO(new Date(date as string).toISOString()).toFormat(
-              "MMM d, yyyy"
-            )}
-          </h6>
+          <h6>{formatDate(date as string)}</h6>
         </div>
         <div className="p-3 text-center">
           <Button asChild>

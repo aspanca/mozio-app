@@ -9,7 +9,11 @@ export const fetchLocations = (value: string) => {
         } else {
           console.log("here");
           resolve(
-            locations.filter((location) => location.city.includes(value))
+            locations.filter((location) =>
+              location.city
+                .toLocaleLowerCase()
+                .includes(value.toLocaleLowerCase())
+            )
           );
         }
       }

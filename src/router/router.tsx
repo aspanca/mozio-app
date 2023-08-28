@@ -1,4 +1,5 @@
 import { Home, Results } from "@/views";
+
 import { createBrowserRouter } from "react-router-dom";
 import { paths } from ".";
 
