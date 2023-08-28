@@ -4,7 +4,7 @@ export const FormSchema = z.object({
   date: z.date({
     required_error: 'A date of birth is required.',
   }),
-  destinations: z.array(
+  cities: z.array(
     z.object({
       city: z.string().nonempty('City is required'),
     })

@@ -44,7 +44,7 @@ import {
   updateQueryParams,
 } from '@/utils';
 import { Dropdown } from './Dropdown';
-import { FormSchema, ValidKeys } from '@/shared';
+import { FormObjectTypeT, FormSchema, LocationType, ValidKeys } from '@/shared';
 import { formatCalendarDate, isBeforeToday } from '@/utils/date';
 
 const displayIcon = (index: number, totalLength: number) => {
@@ -55,14 +55,14 @@ const displayIcon = (index: number, totalLength: number) => {
   );
 };
 
-export function Home() {
+export const Home = () => {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     mode: 'all',
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      destinations: [{ city: '' }],
+      cities: [{ city: '' }],
       passengers: 0,
       date: new Date(),
     },
@@ -70,9 +70,10 @@ export function Home() {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: 'destinations',
+    name: 'cities',
   });
-  const values = form.getValues();
+
+  const values: FormObjectTypeT = form.getValues() as FormObjectTypeT;
 
   useEffect(() => {
     if (form.formState.isDirty) {
@@ -86,7 +87,7 @@ export function Home() {
     form.reset(formObject);
   }, [form]);
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: FormObjectTypeT) => {
     const searchObject = constructSearchObjectFromForm(data);
 
     navigate({
@@ -114,7 +115,7 @@ export function Home() {
                         <div className="w-[80%]">
                           <FormField
                             control={form.control}
-                            name={`destinations.${index}.city`}
+                            name={`cities.${index}.city`}
                             render={({ field }) => (
                               <FormItem className="flex flex-col">
                                 <FormLabel>
@@ -130,7 +131,7 @@ export function Home() {
                                   selectedValue={
                                     field.value
                                       ? (locations.find(
-                                          location =>
+                                          (location: LocationType) =>
                                             location.city === field.value
                                         )?.city as string)
                                       : 'Select destination'

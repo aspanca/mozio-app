@@ -8,19 +8,25 @@ import { Error } from '@/components/ui/error';
 import { DistanceStepper } from '@/components/ui/distance-stepper';
 import { Circle, MapPin } from 'lucide-react';
 import { formatDate, parseLocationSerch } from '@/utils';
-import { City, Destination, PinPoint } from '@/shared';
+import { LocationType, PinPointType, QueryParamsType } from '@/shared';
 
 export const Results = () => {
-  const search = parseLocationSerch();
+  const search: QueryParamsType = parseLocationSerch();
 
-  const destinations: City[] = Array.isArray(search.destinations)
-    ? (search.destinations as string[]).map(destination => {
-        return locations.find(location => location.city === destination)!;
+  const cities: LocationType[] = Array.isArray(search.cities)
+    ? search.cities.map(city => {
+        return locations.find(
+          (location: LocationType) => location.city === city
+        ) as LocationType;
       })
-    : [{ city: search.destinations as string }];
+    : [
+        locations.find(
+          (location: LocationType) => location.city === search.cities
+        ) as LocationType,
+      ];
 
   const { data, isLoading, isError } = useQuery('calculations', () =>
-    calculations(destinations as unknown as Destination[])
+    calculations(cities)
   );
 
   const { pinPointDistance, distanceInKm } = data ?? {};
@@ -36,18 +42,20 @@ export const Results = () => {
         <div className="p-3">
           <DistanceStepper
             steps={
-              pinPointDistance?.map((destination: PinPoint, index: number) => {
-                return {
-                  icon:
-                    index === pinPointDistance.length - 1 ? (
-                      <MapPin size={16} className="text-red-500" />
-                    ) : (
-                      <Circle size={16} />
-                    ),
-                  element: destination.city,
-                  distance: destination.distance,
-                };
-              }) ?? []
+              pinPointDistance?.map(
+                (destination: PinPointType, index: number) => {
+                  return {
+                    icon:
+                      index === pinPointDistance.length - 1 ? (
+                        <MapPin size={16} className="text-red-500" />
+                      ) : (
+                        <Circle size={16} />
+                      ),
+                    element: destination.city,
+                    distance: destination.distance,
+                  };
+                }
+              ) ?? []
             }
           />
         </div>

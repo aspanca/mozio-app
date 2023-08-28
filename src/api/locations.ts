@@ -1,3 +1,5 @@
+import { LocationType } from '@/shared';
+
 export const fetchLocations = (value: string) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -17,11 +19,11 @@ export const fetchLocations = (value: string) => {
           );
         }
       }
-    }, 1000);
+    }, 300);
   });
 };
 
-export const locations = [
+export const locations: LocationType[] = [
   {
     city: 'Paris',
     lat: 48.856614,

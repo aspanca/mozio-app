@@ -1,67 +1,68 @@
-import { City, FormObjectType, SearchParamsType } from '@/shared';
+import {
+  CityType,
+  FormObjectTypeT,
+  QueryParamsType,
+  StringifiedQueryParamsType,
+} from '@/shared';
 import queryString from 'query-string';
 
-export const parseLocationSerch = () => {
+export const parseLocationSerch = (): QueryParamsType => {
   return queryString.parse(location.search, { parseNumbers: true });
 };
 
-export const stringifySearch = (data: SearchParamsType) => {
+export const stringifySearch = (data: StringifiedQueryParamsType) => {
   return queryString.stringify(data);
 };
 
 export const isSearchValid = () => {
-  const search = parseLocationSerch();
+  const search: QueryParamsType = parseLocationSerch();
 
   if (!search.date) return false;
   if (!search.passengers) return false;
-  if (!search.destinations) return false;
+  if (!search.cities) return false;
 
   return true;
 };
 
-export const constructFormObjectFromSearch = () => {
-  const search = parseLocationSerch();
+export const constructFormObjectFromSearch = (): FormObjectTypeT => {
+  const search: QueryParamsType = parseLocationSerch();
+
+  const parseCity = (city: string | undefined): CityType => ({
+    city: city ?? '',
+  });
 
   return {
-    passengers: search.passengers as number,
-    date: search.date ? new Date(search.date as string) : new Date(),
-    destinations: Array.isArray(search?.destinations)
-      ? (search?.destinations as string[])?.map(destination => {
-          return {
-            city: destination as string,
-          };
-        })
-      : [{ city: search.destinations as string }],
+    passengers: search.passengers ?? 0,
+    date: search.date ? new Date(search.date) : new Date(),
+    cities: Array.isArray(search.cities)
+      ? search.cities.map(parseCity)
+      : [parseCity(search.cities)],
   };
 };
 
-export const constructSearchObjectFromForm = (data: FormObjectType) => {
+export const constructSearchObjectFromForm = (data: FormObjectTypeT) => {
   return {
     passengers: data.passengers as number,
     date: data.date,
-    destinations: data.destinations.map(
-      (destination: City) => destination.city
-    ),
+    cities: data.cities.map((destination: CityType) => destination.city),
   };
 };
 
-export const updateQueryParams = (values: FormObjectType) => {
+export const updateQueryParams = (values: FormObjectTypeT) => {
   const url = new URL(window.location.href);
 
-  if (values.date) {
-    url.searchParams.set('date', values.date?.toString());
-  }
+  if (values.date) url.searchParams.set('date', values.date.toString());
+  else url.searchParams.delete('date');
 
-  if (values.destinations.length) {
-    url.searchParams.delete('destinations');
-    values.destinations.forEach((destination: City) => {
-      url.searchParams.append('destinations', destination?.city?.toString());
-    });
-  }
+  url.searchParams.delete('cities');
+  values.cities.forEach(destination => {
+    if (destination.city)
+      url.searchParams.append('cities', destination.city.toString());
+  });
 
-  if (values.passengers) {
-    url.searchParams.set('passengers', values.passengers?.toString());
-  }
+  if (values.passengers)
+    url.searchParams.set('passengers', values.passengers.toString());
+  else url.searchParams.delete('passengers');
 
   window.history.pushState(null, '', url.toString());
 };

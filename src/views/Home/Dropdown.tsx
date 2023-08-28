@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Destination } from '@/shared';
+import { LocationType } from '@/shared';
 import { debounce } from '@/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
@@ -77,12 +77,12 @@ export const Dropdown = (props: DropdownProps) => {
               </Alert>
             </IF>
             <CommandGroup>
-              {(data as Destination[])?.map((location: Destination) => (
+              {(data as LocationType[])?.map((location: LocationType) => (
                 <CommandItem
                   value={location.city}
                   key={location.city}
                   onSelect={() => {
-                    onSelect(`destinations.${index}.city`, location.city);
+                    onSelect(`cities.${index}.city`, location.city);
                   }}
                 >
                   <Check

@@ -1,38 +1,41 @@
-export type PinPoint = {
+type SearchKeys = 'cities' | 'date' | 'passengers';
+type DestinationKeys = `cities.${number}` | `cities.${number}.city`;
+
+export type ValidKeys = SearchKeys | DestinationKeys;
+
+export type QueryParamsType = {
+  date?: string;
+  cities?: string | string[];
+  passengers?: number;
+};
+
+export type CityType = {
+  city: string;
+};
+
+export type LocationType = {
   lat: number;
   lng: number;
   city: string;
+};
+
+export type FormObjectTypeT = {
+  passengers: number;
+  date: Date;
+  cities: CityType[];
+};
+
+export type PinPointType = LocationType & {
   distance: string | null;
 };
 
-export type CalculationsResult = {
-  pinPointDistance: PinPoint[];
+export type CalculationsResultType = {
+  pinPointDistance: PinPointType[];
   distanceInKm: string;
 };
 
-export type Destination = {
-  lat: number;
-  lng: number;
-  city: string;
-};
-
-export type City = {
-  city: string;
-};
-
-export type SearchParamsType = {
-  date: Date;
+export type StringifiedQueryParamsType = {
   passengers: number;
-  destinations: string[];
-};
-
-export type FormObjectType = {
   date: Date;
-  passengers: number;
-  destinations: City[];
+  cities: string[];
 };
-
-type SearchKeys = 'destinations' | 'date' | 'passengers';
-type DestinationKeys = `destinations.${number}` | `destinations.${number}.city`;
-
-export type ValidKeys = SearchKeys | DestinationKeys;
