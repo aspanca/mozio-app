@@ -1,7 +1,18 @@
-export const fetchLocations = () => {
-  return new Promise((resolve) => {
+export const fetchLocations = (value: string) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve({ locations, success: true, error: false });
+      if (value === "Fail") {
+        reject();
+      } else {
+        if (value === "") {
+          resolve([]);
+        } else {
+          console.log("here");
+          resolve(
+            locations.filter((location) => location.city.includes(value))
+          );
+        }
+      }
     }, 1000);
   });
 };

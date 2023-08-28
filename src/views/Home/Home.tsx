@@ -44,7 +44,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { locations } from "@/api";
 import { Stepper } from "@/components/ui/stepper";
 import {
@@ -53,6 +53,9 @@ import {
   isSearchValid,
   stringifySearch,
 } from "@/utils";
+import { useQuery } from "react-query";
+import { fetchLocations } from "@/api/locations";
+import { Loader } from "@/components/ui/loader";
 
 const FormSchema = z.object({
   date: z.date({
@@ -69,6 +72,12 @@ const FormSchema = z.object({
 });
 
 export function Home() {
+  const [value, setValue] = useState("");
+
+  const { data, isLoading, isError } = useQuery(["locations", value], () =>
+    fetchLocations(value)
+  );
+
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -105,6 +114,11 @@ export function Home() {
   const handleAppend = () => {
     append({ city: "" });
   };
+
+  const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) =>
+    setValue(e.currentTarget.value);
+
+  console.log(data);
 
   return (
     <div className="w-[800px] m-auto">
@@ -163,45 +177,52 @@ export function Home() {
                                     <Command className="w-[500px]">
                                       <CommandInput
                                         placeholder="Search city..."
-                                        onKeyUp={(
-                                          e: React.KeyboardEvent<HTMLInputElement>
-                                        ) => console.log(e.currentTarget.value)}
+                                        onKeyUp={handleChange}
                                       />
-                                      <Alert variant="destructive">
-                                        <AlertTitle>
-                                          Oops! failed to search with this
-                                          keyword. {field.value}
-                                        </AlertTitle>
-                                      </Alert>
-                                      <IF condition={field.value === "Fail"}>
-                                        <CommandEmpty>
-                                          No city found.
-                                        </CommandEmpty>
-                                      </IF>
-                                      <CommandGroup>
-                                        {locations.map((location) => (
-                                          <CommandItem
-                                            value={location.city}
-                                            key={location.city}
-                                            onSelect={() => {
-                                              form.setValue(
-                                                `destinations.${index}.city`,
-                                                location.city
-                                              );
-                                            }}
-                                          >
-                                            <Check
-                                              className={cn(
-                                                "mr-2 h-4 w-4",
-                                                location.city === field.value
-                                                  ? "opacity-100"
-                                                  : "opacity-0"
-                                              )}
-                                            />
-                                            {location.city}
-                                          </CommandItem>
-                                        ))}
-                                      </CommandGroup>
+                                      <Loader isLoading={isLoading}>
+                                        <IF condition={isError}>
+                                          <Alert variant="destructive">
+                                            <AlertTitle>
+                                              Oops! failed to search with this
+                                              keyword. {field.value}
+                                            </AlertTitle>
+                                          </Alert>
+                                        </IF>
+                                        <IF
+                                          condition={(data as [])?.length === 0}
+                                        >
+                                          <CommandEmpty>
+                                            No city found.
+                                          </CommandEmpty>
+                                        </IF>
+                                        <CommandGroup>
+                                          {(data as [])?.map(
+                                            (location: any) => (
+                                              <CommandItem
+                                                value={location.city}
+                                                key={location.city}
+                                                onSelect={() => {
+                                                  form.setValue(
+                                                    `destinations.${index}.city`,
+                                                    location.city
+                                                  );
+                                                }}
+                                              >
+                                                <Check
+                                                  className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    location.city ===
+                                                      field.value
+                                                      ? "opacity-100"
+                                                      : "opacity-0"
+                                                  )}
+                                                />
+                                                {location.city}
+                                              </CommandItem>
+                                            )
+                                          )}
+                                        </CommandGroup>
+                                      </Loader>
                                     </Command>
                                   </PopoverContent>
                                 </Popover>
