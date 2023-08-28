@@ -64,6 +64,7 @@ export function Home() {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
+    mode: "all",
     resolver: zodResolver(FormSchema),
     defaultValues: {
       destinations: [{ city: "" }, { city: "" }],
@@ -210,10 +211,9 @@ export function Home() {
               );
             })}
             <div className="m-3">
-              <Button variant="ghost" type="submit" onClick={handleAppend}>
+              <Button variant="ghost" type="button" onClick={handleAppend}>
                 {" "}
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Destination
-                destination
+                <PlusCircle className="mr-2 h-4 w-4" /> Add destination
               </Button>
             </div>
           </div>
@@ -249,7 +249,9 @@ export function Home() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < new Date()}
+                          disabled={(date) =>
+                            date < new Date(new Date().setHours(0, 0, 0, 0))
+                          }
                           initialFocus
                         />
                       </PopoverContent>
@@ -274,11 +276,9 @@ export function Home() {
                     >
                       <Input
                         {...field}
+                        value={field.value}
                         type="text"
                         className="appearance-none border-none text-center focus-visible:ring-0 p-0"
-                        onChange={() => {
-                          return;
-                        }}
                       />
                     </IncrementDecrement>
                     <FormMessage />

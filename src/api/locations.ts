@@ -1,3 +1,11 @@
+export const fetchLocations = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ locations, success: true, error: false });
+    }, 1000);
+  });
+};
+
 export const locations = [
   {
     city: "Paris",
