@@ -6,6 +6,8 @@ import {
   CalendarIcon,
   Check,
   ChevronsUpDown,
+  Circle,
+  MapPin,
   MinusCircle,
   PlusCircle,
 } from "lucide-react";
@@ -45,6 +47,7 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "@/router";
 import { useEffect } from "react";
 import { locations } from "@/api";
+import { Stepper } from "@/components/ui/stepper";
 
 const FormSchema = z.object({
   date: z.date({
@@ -112,113 +115,126 @@ export function Home() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="m-4 w-[700px] grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            {fields.map((field, index) => {
-              return (
-                <div className="p-3 flex items-start" key={field.id}>
-                  <div className="w-[80%]">
-                    <FormField
-                      control={form.control}
-                      name={`destinations.${index}.city`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>
-                            <IF condition={index === 0}>City of origin</IF>
-                            <IF condition={index !== 0}>City of Destination</IF>
-                          </FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  role="combobox"
-                                  className={cn(
-                                    "w-full justify-between",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value
-                                    ? locations.find(
-                                        (location) =>
-                                          location.city === field.value
-                                      )?.city
-                                    : "Select language"}
-                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-full p-0">
-                              <Command className="w-[500px]">
-                                <CommandInput
-                                  placeholder="Search framework..."
-                                  onKeyUp={(
-                                    e: React.KeyboardEvent<HTMLInputElement>
-                                  ) => console.log(e.currentTarget.value)}
-                                />
-                                <Alert variant="destructive">
-                                  <AlertTitle>
-                                    Oops! failed to search with this keyword.{" "}
-                                    {field.value}
-                                  </AlertTitle>
-                                </Alert>
-                                <IF condition={field.value === "Fail"}>
-                                  <CommandEmpty>
-                                    No framework found.
-                                  </CommandEmpty>
+            <Stepper
+              steps={fields.map((field, index) => {
+                return {
+                  icon:
+                    index === fields.length - 1 ? (
+                      <MapPin size={16} className="text-red-500" />
+                    ) : (
+                      <Circle size={16} />
+                    ),
+                  element: (
+                    <div className="p-3 flex items-start" key={field.id}>
+                      <div className="w-[80%]">
+                        <FormField
+                          control={form.control}
+                          name={`destinations.${index}.city`}
+                          render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                              <FormLabel>
+                                <IF condition={index === 0}>City of origin</IF>
+                                <IF condition={index !== 0}>
+                                  City of Destination
                                 </IF>
-                                <CommandGroup>
-                                  {locations.map((location) => (
-                                    <CommandItem
-                                      value={location.city}
-                                      key={location.city}
-                                      onSelect={() => {
-                                        form.setValue(
-                                          `destinations.${index}.city`,
-                                          location.city
-                                        );
-                                      }}
+                              </FormLabel>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button
+                                      variant="outline"
+                                      role="combobox"
+                                      className={cn(
+                                        "w-full justify-between",
+                                        !field.value && "text-muted-foreground"
+                                      )}
                                     >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          location.city === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {location.city}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                                      {field.value
+                                        ? locations.find(
+                                            (location) =>
+                                              location.city === field.value
+                                          )?.city
+                                        : "Select language"}
+                                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0">
+                                  <Command className="w-[500px]">
+                                    <CommandInput
+                                      placeholder="Search framework..."
+                                      onKeyUp={(
+                                        e: React.KeyboardEvent<HTMLInputElement>
+                                      ) => console.log(e.currentTarget.value)}
+                                    />
+                                    <Alert variant="destructive">
+                                      <AlertTitle>
+                                        Oops! failed to search with this
+                                        keyword. {field.value}
+                                      </AlertTitle>
+                                    </Alert>
+                                    <IF condition={field.value === "Fail"}>
+                                      <CommandEmpty>
+                                        No framework found.
+                                      </CommandEmpty>
+                                    </IF>
+                                    <CommandGroup>
+                                      {locations.map((location) => (
+                                        <CommandItem
+                                          value={location.city}
+                                          key={location.city}
+                                          onSelect={() => {
+                                            form.setValue(
+                                              `destinations.${index}.city`,
+                                              location.city
+                                            );
+                                          }}
+                                        >
+                                          <Check
+                                            className={cn(
+                                              "mr-2 h-4 w-4",
+                                              location.city === field.value
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                          />
+                                          {location.city}
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <IF condition={fields.length > 2}>
-                    <div className="w-[20%] flex justify-center mt-8">
-                      <MinusCircle
-                        size={15}
-                        onClick={() => remove(index)}
-                        className="cursor-pointer"
-                      />
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <IF condition={fields.length > 2}>
+                        <div className="w-[20%] flex justify-center mt-8">
+                          <MinusCircle
+                            size={15}
+                            onClick={() => remove(index)}
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </IF>
                     </div>
-                  </IF>
-                </div>
-              );
-            })}
-            <div className="m-3">
-              <Button variant="ghost" type="button" onClick={handleAppend}>
-                {" "}
-                <PlusCircle className="mr-2 h-4 w-4" /> Add destination
-              </Button>
+                  ),
+                };
+              })}
+            />
+            <div
+              className="flex mt-3 items-center cursor-pointer"
+              onClick={handleAppend}
+            >
+              <PlusCircle className="-ml-2 h-4 w-4" />
+              <p className="ml-7">Add destination</p>
             </div>
           </div>
           <div className="col-span-1">
-            <div className="p-1">
+            <div className="p-3">
               <FormField
                 control={form.control}
                 name="date"
