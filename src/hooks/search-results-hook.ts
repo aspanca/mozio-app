@@ -2,8 +2,11 @@ import { calculations, locations } from '@/api';
 import { useQuery } from 'react-query';
 import { parseLocationSerch } from '@/utils';
 import { LocationType, QueryParamsType } from '@/shared';
+import { useNavigate } from 'react-router-dom';
 
 export const useSearchResults = () => {
+  const navigate = useNavigate();
+
   const search: QueryParamsType = parseLocationSerch();
 
   const cities: LocationType[] = Array.isArray(search.cities)
@@ -25,6 +28,10 @@ export const useSearchResults = () => {
   const { pinPointDistance, distanceInKm } = data ?? {};
   const { date, passengers } = search ?? {};
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return {
     pinPointDistance,
     distanceInKm,
@@ -32,5 +39,6 @@ export const useSearchResults = () => {
     passengers,
     isLoading,
     isError,
+    goBack,
   };
 };

@@ -16,9 +16,9 @@ export const DistanceStepper = (props: DistanceStepperProps) => {
 
   return (
     <ol className="relative border-l w-[500px] left-[100%] transform -translate-x-1/2">
-      {steps.map((step, index) => {
+      {steps.map(step => {
         return (
-          <li className="mb-10 pl-6 relative" key={index}>
+          <li className="mb-10 pl-6 relative" key={step.distance}>
             <span className="absolute flex items-center justify-center w-6 h-6 bg-white rounded-full -left-3 top-0">
               {step.icon}
             </span>

@@ -9,7 +9,6 @@ export const fetchLocations = (value: string) => {
         if (value === '') {
           resolve([]);
         } else {
-          console.log('here');
           resolve(
             locations.filter(location =>
               location.city

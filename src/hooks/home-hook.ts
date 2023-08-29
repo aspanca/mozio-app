@@ -14,7 +14,7 @@ import {
   stringifySearch,
   updateQueryParams,
 } from '@/utils';
-import { FormObjectTypeT, FormSchema } from '@/shared';
+import { FormObjectTypeT, FormSchema, ValidKeys } from '@/shared';
 import { fetchLocations } from '@/api/locations';
 import { useQuery } from 'react-query';
 
@@ -49,8 +49,6 @@ export const useHome = () => {
 
   const values: FormObjectTypeT = form.getValues() as FormObjectTypeT;
 
-  console.log(form.formState.isDirty);
-
   useEffect(() => {
     if (form.formState.isDirty) {
       updateQueryParams(values);
@@ -80,11 +78,27 @@ export const useHome = () => {
     remove(index);
   };
 
+  const handleUpdatePassengers = (value: number) => {
+    form.setValue(`passengers`, value, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const handleSelectCity = (key: string, value: string) => {
+    form.setValue(key as ValidKeys, value, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
   return {
     onSubmit,
     handleAppend,
     handleRemove,
     handleChange,
+    handleUpdatePassengers,
+    handleSelectCity,
     form,
     fields,
     data,

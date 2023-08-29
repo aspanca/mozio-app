@@ -27,13 +27,14 @@ import { IF } from '@/components/IF';
 import { IncrementDecrement } from '@/components/ui/increment-decrement';
 import { Input } from '@/components/ui/input';
 import { locations } from '@/api';
-import { Stepper } from '@/components/ui/stepper';
+import { LocationStepper } from '@/components/ui/location-stepper';
 import { Dropdown } from './Dropdown';
-import { LocationType, ValidKeys } from '@/shared';
+import { LocationType } from '@/shared';
 import { formatCalendarDate, isBeforeToday } from '@/utils/date';
 import { useHome } from '@/hooks';
+import { Box } from '@/components/ui/box';
 
-const displayIcon = (index: number, totalLength: number) => {
+const renderIcon = (index: number, totalLength: number) => {
   return index === totalLength - 1 ? (
     <MapPin size={16} className="text-red-500" />
   ) : (
@@ -42,21 +43,29 @@ const displayIcon = (index: number, totalLength: number) => {
 };
 
 export const Home = () => {
-  const { form, fields, onSubmit, handleAppend, handleRemove } = useHome();
+  const {
+    form,
+    fields,
+    onSubmit,
+    handleAppend,
+    handleRemove,
+    handleUpdatePassengers,
+    handleSelectCity,
+  } = useHome();
 
   return (
-    <div className="w-[800px] m-auto">
+    <Box className="w-[800px] m-auto">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="m-4 w-full grid grid-cols-3">
-            <div className="col-span-2">
-              <Stepper
+          <Box className="m-4 w-full grid grid-cols-3">
+            <Box className="col-span-2">
+              <LocationStepper
                 steps={fields.map((field, index) => {
                   return {
-                    icon: displayIcon(index, fields.length),
+                    icon: renderIcon(index, fields.length),
                     element: (
-                      <div className="p-3 flex items-start" key={field.id}>
-                        <div className="w-[80%]">
+                      <Box className="p-3 flex items-start" key={field.id}>
+                        <Box className="w-[80%]">
                           <FormField
                             control={form.control}
                             name={`cities.${index}.city`}
@@ -80,12 +89,7 @@ export const Home = () => {
                                         )?.city as string)
                                       : 'Select destination'
                                   }
-                                  onSelect={(key: string, value: string) =>
-                                    form.setValue(key as ValidKeys, value, {
-                                      shouldDirty: true,
-                                      shouldValidate: true,
-                                    })
-                                  }
+                                  onSelect={handleSelectCity}
                                   index={index}
                                 />
 
@@ -93,31 +97,31 @@ export const Home = () => {
                               </FormItem>
                             )}
                           />
-                        </div>
+                        </Box>
                         <IF condition={fields.length > 2}>
-                          <div className="w-[20%] flex justify-center mt-8">
+                          <Box className="w-[20%] flex justify-center mt-8">
                             <MinusCircle
                               size={15}
                               onClick={() => handleRemove(index)}
                               className="cursor-pointer"
                             />
-                          </div>
+                          </Box>
                         </IF>
-                      </div>
+                      </Box>
                     ),
                   };
                 })}
               />
-              <div
+              <Box
                 className="flex mt-3 items-center cursor-pointer"
                 onClick={handleAppend}
               >
                 <PlusCircle className="-ml-2 h-4 w-4" />
                 <p className="ml-7">Add destination</p>
-              </div>
-            </div>
-            <div className="col-span-1">
-              <div className="p-3">
+              </Box>
+            </Box>
+            <Box className="col-span-1">
+              <Box className="p-3">
                 <FormField
                   control={form.control}
                   name="date"
@@ -153,8 +157,8 @@ export const Home = () => {
                     </FormItem>
                   )}
                 />
-              </div>
-              <div className="p-3">
+              </Box>
+              <Box className="p-3">
                 <FormField
                   control={form.control}
                   name="passengers"
@@ -163,12 +167,7 @@ export const Home = () => {
                       <FormLabel>Passengers</FormLabel>
                       <IncrementDecrement
                         value={field.value}
-                        onChange={value => {
-                          form.setValue(`passengers`, value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
+                        onChange={handleUpdatePassengers}
                       >
                         <Input
                           {...field}
@@ -182,14 +181,14 @@ export const Home = () => {
                     </FormItem>
                   )}
                 />
-              </div>
-            </div>
-            <div className="col-span-3 grid justify-center">
+              </Box>
+            </Box>
+            <Box className="col-span-3 grid justify-center">
               <Button type="submit">Submit</Button>
-            </div>
-          </div>
+            </Box>
+          </Box>
         </form>
       </Form>
-    </div>
+    </Box>
   );
 };
