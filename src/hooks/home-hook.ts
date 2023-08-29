@@ -52,10 +52,10 @@ export const useHome = () => {
   console.log(form.formState.isDirty);
 
   useEffect(() => {
-    if (form.formState.touchedFields) {
+    if (form.formState.isDirty) {
       updateQueryParams(values);
     }
-  }, [values, form.formState.touchedFields]);
+  }, [values, form.formState.isDirty]);
 
   useEffect(() => {
     const formObject = constructFormObjectFromSearch();

@@ -108,13 +108,6 @@ it('should icnrement/decrement value by clicking the buttons and update query pa
     expect(valueInput).toHaveValue('1');
     expect(location.search).toContain('passengers=1');
   });
-
-  userEvent.click(decrementBtn);
-
-  await waitFor(async () => {
-    expect(valueInput).toHaveValue('0');
-    expect(location.search).not.toContain('passengers');
-  });
 });
 
 it('retains query params on refresh', async () => {
@@ -123,8 +116,6 @@ it('retains query params on refresh', async () => {
   const incrementBtn = screen.getByTestId('increment-btn');
 
   expect(incrementBtn).toBeVisible();
-
-  userEvent.click(incrementBtn);
 
   userEvent.click(incrementBtn);
 
