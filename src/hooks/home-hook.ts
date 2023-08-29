@@ -49,11 +49,13 @@ export const useHome = () => {
 
   const values: FormObjectTypeT = form.getValues() as FormObjectTypeT;
 
+  console.log(form.formState.isDirty);
+
   useEffect(() => {
-    if (form.formState.isDirty) {
+    if (form.formState.touchedFields) {
       updateQueryParams(values);
     }
-  }, [values, form.formState.isDirty]);
+  }, [values, form.formState.touchedFields]);
 
   useEffect(() => {
     const formObject = constructFormObjectFromSearch();

@@ -27,6 +27,7 @@ export function IncrementDecrement(props: IncrementDecrementProps) {
         className="w-[25px] h-[25px] p-0"
         onClick={handleDecrement}
         type="button"
+        data-testid="decrement-btn"
       >
         <Minus size={15} />
       </Button>
@@ -37,6 +38,7 @@ export function IncrementDecrement(props: IncrementDecrementProps) {
         className="w-[25px] h-[25px] p-0"
         onClick={handleIncrement}
         type="button"
+        data-testid="increment-btn"
       >
         <Plus size={15} />
       </Button>

@@ -175,6 +175,7 @@ export const Home = () => {
                           value={field.value}
                           type="text"
                           className="appearance-none border-none text-center focus-visible:ring-0 p-0"
+                          data-testid="increment-decrement-input"
                         />
                       </IncrementDecrement>
                       <FormMessage />

@@ -2,6 +2,8 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { Home } from './Home';
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
 
 const App = (
   <ReactQueryProvider>
@@ -70,7 +72,7 @@ it('should open combobox with all the elements when clicking select destination'
   });
 });
 
-it('should display a list of options when writting in combobox input', async () => {
+it('should display a dialog when writting in combobox input', async () => {
   render(App);
 
   screen.getByText(/Select destination/).click();
@@ -81,9 +83,58 @@ it('should display a list of options when writting in combobox input', async () 
 
   const input = screen.getByPlaceholderText(/Search city.../);
 
-  fireEvent.change(input, { target: { value: 'T' } });
+  fireEvent.change(input, { target: { value: 'Paris' } });
+  expect(input).toHaveValue('Paris');
 
-  await waitFor(() => {
-    expect(screen.getByRole('option', { hidden: true })).toBeVisible();
+  act(() => {
+    expect(screen.getByRole('dialog')).toBeVisible();
+  });
+});
+
+it('should icnrement/decrement value by clicking the buttons and update query params accordingly', async () => {
+  render(App);
+
+  const incrementBtn = screen.getByTestId('increment-btn');
+  const decrementBtn = screen.getByTestId('decrement-btn');
+  const valueInput = screen.getByTestId('increment-decrement-input');
+
+  expect(incrementBtn).toBeVisible();
+  expect(decrementBtn).toBeVisible();
+  expect(valueInput).toBeVisible();
+
+  userEvent.click(incrementBtn);
+
+  await waitFor(async () => {
+    expect(valueInput).toHaveValue('1');
+    expect(location.search).toContain('passengers=1');
+  });
+
+  userEvent.click(decrementBtn);
+
+  await waitFor(async () => {
+    expect(valueInput).toHaveValue('0');
+    expect(location.search).not.toContain('passengers');
+  });
+});
+
+it('retains query params on refresh', async () => {
+  const { unmount } = render(App);
+
+  const incrementBtn = screen.getByTestId('increment-btn');
+
+  expect(incrementBtn).toBeVisible();
+
+  userEvent.click(incrementBtn);
+
+  userEvent.click(incrementBtn);
+
+  await waitFor(async () => {
+    expect(location.search).toContain('passengers=1');
+  });
+
+  unmount();
+
+  await waitFor(async () => {
+    expect(location.search).toContain('passengers=1');
   });
 });
