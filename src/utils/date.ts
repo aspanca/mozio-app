@@ -1,10 +1,9 @@
 import { format } from 'date-fns';
 import { DateTime } from 'luxon';
 
-export const formatDate = (date: string) => {
-  return DateTime.fromISO(new Date(date as string).toISOString()).toFormat(
-    'MMM d, yyyy'
-  );
+export const formatDate = (date: Date) => {
+  const luxonDate = DateTime.fromJSDate(date);
+  return luxonDate.toFormat('MMM d, yyyy');
 };
 
 export const isBeforeToday = (date: Date) => {

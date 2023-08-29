@@ -2,7 +2,6 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { Home } from './Home';
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
-import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 
 const App = (
@@ -86,7 +85,7 @@ it('should display a dialog when writting in combobox input', async () => {
   fireEvent.change(input, { target: { value: 'Paris' } });
   expect(input).toHaveValue('Paris');
 
-  act(() => {
+  await waitFor(() => {
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 });

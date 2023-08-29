@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { NavLink } from 'react-router-dom';
 import { paths } from '@/router';
 import { Loader } from '@/components/ui/loader';
-import { Error } from '@/components/ui/error';
+// import { Error } from '@/components/ui/error';
 import { DistanceStepper } from '@/components/ui/distance-stepper';
 import { Circle, MapPin } from 'lucide-react';
 import { formatDate } from '@/utils';
@@ -20,7 +20,7 @@ export const Results = () => {
   } = useSearchResults();
 
   if (isError) {
-    return <Error />;
+    return <h1>HELLO</h1>;
   }
 
   return (
@@ -47,12 +47,12 @@ export const Results = () => {
           />
         </div>
         <div className="p-3 text-center">
-          <h6>{distanceInKm} km is total distance</h6>
+          <h6>{distanceInKm} is total distance</h6>
           <h6>{passengers} passengers</h6>
-          <h6>{formatDate(date as string)}</h6>
+          <h6>{formatDate(new Date(date as string))}</h6>
         </div>
         <div className="p-3 text-center">
-          <Button asChild>
+          <Button asChild data-testid="back">
             <NavLink to={paths.home}>Back</NavLink>
           </Button>
         </div>

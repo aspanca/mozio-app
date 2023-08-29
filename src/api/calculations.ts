@@ -53,7 +53,7 @@ export const calculations = (
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (cities.map((city: CityType) => city.city).includes('Dijon')) {
+      if (cities.map((city: CityType) => city?.city).includes('Dijon')) {
         reject(new Error('An unexpected error occurred!'));
       } else {
         resolve({
