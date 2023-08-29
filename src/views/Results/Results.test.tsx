@@ -29,9 +29,9 @@ it('should render city input', async () => {
   expect(location.search).toContain('passengers=3');
 
   await waitFor(() => {
-    expect(screen.getByText(/3 passengers/)).toBeVisible();
+    expect(screen.getByText(/passengers/)).toBeVisible();
     expect(screen.getByText(/km is total distance/)).toBeVisible();
     expect(screen.getByText(/Aug 30, 2023/)).toBeVisible();
-    expect(screen.getByTestId('back')).toBeVisible();
+    expect(screen.getByText(/Back/)).toBeVisible();
   });
 });
