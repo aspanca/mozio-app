@@ -51,9 +51,9 @@ export const Dropdown = (props: DropdownProps) => {
       <PopoverContent className="w-full p-0">
         <Command className="w-[385px]">
           <CommandInput placeholder="Search city..." onKeyUp={handleChange} />
-          <CommandEmpty>
-            <IF condition={!isLoading}> No city found.</IF>
-          </CommandEmpty>
+          <IF condition={!isError}>
+            <CommandEmpty>No city found.</CommandEmpty>
+          </IF>
 
           <Loader isLoading={isLoading}>
             <IF condition={isError}>
