@@ -1,3 +1,4 @@
+import { Box } from '@/components/ui/box';
 import { Button } from '@/components/ui/button';
 
 type BackButtonProps = {
@@ -7,8 +8,8 @@ type BackButtonProps = {
 export const BackButton = (props: BackButtonProps) => {
   const { goBack } = props;
   return (
-    <div className="p-3 text-center">
+    <Box className="p-3 text-center">
       <Button onClick={goBack}>Back</Button>
-    </div>
+    </Box>
   );
 };

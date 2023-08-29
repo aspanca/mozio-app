@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693351492345" clover="3.2.0">
-  <project timestamp="1693351492345" name="All files">
-    <metrics statements="1974" coveredstatements="1620" conditionals="110" coveredconditionals="90" methods="55" coveredmethods="36" elements="2139" coveredelements="1746" complexity="0" loc="1974" ncloc="1974" packages="12" files="45" classes="45"/>
+<coverage generated="1693351986439" clover="3.2.0">
+  <project timestamp="1693351986439" name="All files">
+    <metrics statements="1977" coveredstatements="1623" conditionals="110" coveredconditionals="90" methods="55" coveredmethods="36" elements="2142" coveredelements="1749" complexity="0" loc="1977" ncloc="1977" packages="12" files="45" classes="45"/>
     <package name="api">
       <metrics statements="194" coveredstatements="160" conditionals="16" coveredconditionals="10" methods="3" coveredmethods="3"/>
       <file name="calculations.ts" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/api/calculations.ts">
@@ -340,14 +340,14 @@
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="cond" truecount="1" falsecount="0"/>
-        <line num="8" count="264" type="stmt"/>
-        <line num="9" count="264" type="stmt"/>
-        <line num="10" count="264" type="stmt"/>
-        <line num="11" count="264" type="stmt"/>
-        <line num="12" count="264" type="stmt"/>
-        <line num="13" count="264" type="stmt"/>
-        <line num="14" count="264" type="stmt"/>
-        <line num="15" count="264" type="stmt"/>
+        <line num="8" count="266" type="stmt"/>
+        <line num="9" count="266" type="stmt"/>
+        <line num="10" count="266" type="stmt"/>
+        <line num="11" count="266" type="stmt"/>
+        <line num="12" count="266" type="stmt"/>
+        <line num="13" count="266" type="stmt"/>
+        <line num="14" count="266" type="stmt"/>
+        <line num="15" count="266" type="stmt"/>
       </file>
       <file name="button.tsx" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/components/ui/button.tsx">
         <metrics statements="56" coveredstatements="56" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
@@ -2026,23 +2026,24 @@
       </file>
     </package>
     <package name="views.Results">
-      <metrics statements="104" coveredstatements="99" conditionals="9" coveredconditionals="6" methods="5" coveredmethods="5"/>
+      <metrics statements="107" coveredstatements="102" conditionals="9" coveredconditionals="6" methods="5" coveredmethods="5"/>
       <file name="BackButton.tsx" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/views/Results/BackButton.tsx">
-        <metrics statements="14" coveredstatements="14" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <metrics statements="15" coveredstatements="15" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="cond" truecount="1" falsecount="0"/>
-        <line num="8" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="cond" truecount="1" falsecount="0"/>
         <line num="9" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
       </file>
       <file name="Results.tsx" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/views/Results/Results.tsx">
         <metrics statements="38" coveredstatements="36" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
@@ -2086,16 +2087,16 @@
         <line num="38" count="2" type="stmt"/>
       </file>
       <file name="TripInfo.tsx" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/views/Results/TripInfo.tsx">
-        <metrics statements="16" coveredstatements="16" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <metrics statements="18" coveredstatements="18" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
+        <line num="9" count="1" type="cond" truecount="1" falsecount="0"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
@@ -2103,6 +2104,8 @@
         <line num="14" count="1" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
       </file>
       <file name="TripLocations.tsx" path="/Users/astritspancs/Desktop/test/Blasera/mozio-app/src/views/Results/TripLocations.tsx">
         <metrics statements="35" coveredstatements="32" conditionals="5" coveredconditionals="3" methods="2" coveredmethods="2"/>

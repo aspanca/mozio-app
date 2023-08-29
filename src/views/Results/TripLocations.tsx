@@ -1,6 +1,6 @@
 import { DistanceStepper } from '@/components/ui/distance-stepper';
 import { PinPointType } from '@/shared';
-import { Circle, MapPin } from 'lucide-react';
+import { Box, Circle, MapPin } from 'lucide-react';
 
 type TripLocationsProps = {
   pinPointDistance?: PinPointType[];
@@ -18,7 +18,7 @@ export const TripLocations = (props: TripLocationsProps) => {
   const { pinPointDistance } = props;
 
   return (
-    <div className="p-3">
+    <Box className="p-3">
       <DistanceStepper
         steps={
           pinPointDistance?.map((destination: PinPointType, index: number) => {
@@ -30,6 +30,6 @@ export const TripLocations = (props: TripLocationsProps) => {
           }) ?? []
         }
       />
-    </div>
+    </Box>
   );
 };
